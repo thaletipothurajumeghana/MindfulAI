@@ -1,8 +1,9 @@
 import os
-from flask import Blueprint, send_from_directory, send_file
+from flask import Blueprint, send_file
 
-TEMPLATE_DIR = r"C:\Users\megha\OneDrive\Desktop\MindfulAI\frontend\templates"
-STATIC_DIR   = r"C:\Users\megha\OneDrive\Desktop\MindfulAI\frontend\static"
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+TEMPLATE_DIR = os.path.join(BASE_DIR, "frontend", "templates")
+STATIC_DIR = os.path.join(BASE_DIR, "frontend", "static")
 
 frontend_bp = Blueprint(
     "frontend", __name__,
