@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MindfulAI — Your Mental Wellness Companion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#0e0f13;--bg2:#15171d;--bg3:#1c1f28;--bg4:#232736;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--text:#e8e6f0;--text2:#9b99ac;--text3:#5e5c6e;--accent:#a78bfa;--accent2:#7c3aed;--accent-glow:rgba(167,139,250,0.14);--teal:#34d399;--teal-dim:rgba(52,211,153,0.12);--rose:#fb7185;--rose-dim:rgba(251,113,133,0.12);--amber:#fbbf24;--amber-dim:rgba(251,191,36,0.12);--r:12px;--r2:18px;--serif:'DM Serif Display',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;--nav-h:57px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:15px}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden}
+button{font-family:var(--sans);cursor:pointer}
+input,textarea{font-family:var(--sans)}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+.hidden{display:none!important}
+.empty-state{text-align:center;color:var(--text3);padding:48px 24px;font-size:14px}
+.auth-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);position:relative;overflow:hidden}
+.auth-screen::before{content:'';position:absolute;width:700px;height:700px;background:radial-gradient(circle,rgba(124,58,237,.17) 0%,transparent 65%);top:-300px;left:-200px;pointer-events:none}
+.auth-screen::after{content:'';position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(52,211,153,.1) 0%,transparent 65%);bottom:-150px;right:-150px;pointer-events:none}
+.auth-card{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r2);padding:48px 40px;width:100%;max-width:430px;position:relative;z-index:1}
+.auth-logo{display:flex;align-items:center;gap:10px;margin-bottom:32px}
+.auth-logo-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--accent2),var(--teal));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.auth-logo-text{font-family:var(--serif);font-size:22px}
+.auth-title{font-family:var(--serif);font-size:28px;margin-bottom:6px}
+.auth-sub{color:var(--text2);font-size:14px;line-height:1.55;margin-bottom:28px}
+.auth-tabs{display:flex;gap:4px;background:var(--bg3);border-radius:10px;padding:4px;margin-bottom:24px}
+.auth-tab{flex:1;padding:8px;border-radius:8px;border:none;background:transparent;color:var(--text2);font-size:14px;transition:all .2s}
+.auth-tab.active{background:var(--bg4);color:var(--text)}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:13px;color:var(--text2);margin-bottom:6px}
+.field input{width:100%;padding:11px 14px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);color:var(--text);font-size:14px;outline:none;transition:border-color .2s}
+.field input:focus{border-color:var(--accent)}
+.field input::placeholder{color:var(--text3)}
+.btn-primary{width:100%;padding:12px;background:linear-gradient(135deg,var(--accent2),#5b21b6);border:none;border-radius:var(--r);color:#fff;font-size:15px;font-weight:500;transition:opacity .2s;margin-top:4px}
+.btn-primary:hover{opacity:.9}
+.btn-secondary{padding:9px 18px;border-radius:10px;border:1px solid var(--border2);background:transparent;color:var(--text2);font-size:13px;transition:all .2s}
+.btn-secondary:hover{background:var(--bg3);color:var(--text)}
+.btn-analyze{padding:9px 18px;border-radius:10px;border:none;background:var(--accent-glow);color:var(--accent);font-size:13px;font-weight:500;transition:all .2s}
+.btn-analyze:hover{background:rgba(167,139,250,.25)}
+.auth-error{color:var(--rose);font-size:13px;margin-top:12px;text-align:center}
+.auth-disclaimer{margin-top:20px;font-size:12px;color:var(--text3);text-align:center;line-height:1.55}
+#app{display:flex;flex-direction:column;min-height:100vh}
+.app-nav{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;height:var(--nav-h);background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.nav-logo{display:flex;align-items:center;gap:8px}
+.nav-logo-icon{width:30px;height:30px;background:linear-gradient(135deg,var(--accent2),var(--teal));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.nav-logo-text{font-family:var(--serif);font-size:17px}
+.nav-tabs{display:flex;gap:4px}
+.nav-tab{padding:7px 16px;border-radius:8px;border:none;background:transparent;color:var(--text2);font-size:13px;transition:all .2s;display:flex;align-items:center;gap:5px}
+.nav-tab.active{background:var(--accent-glow);color:var(--accent)}
+.nav-tab:hover:not(.active){background:var(--bg3);color:var(--text)}
+.nav-user{display:flex;align-items:center;gap:10px}
+.nav-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent2),var(--teal));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500}
+.nav-username{font-size:13px;color:var(--text2)}
+.btn-logout{padding:5px 12px;border-radius:8px;border:1px solid var(--border2);background:transparent;color:var(--text2);font-size:12px;transition:all .2s}
+.btn-logout:hover{background:var(--bg3);color:var(--text)}
+.view{display:none;flex:1;height:calc(100vh - var(--nav-h))}
+.view.active{display:flex}
+.page-content{flex:1;overflow-y:auto;padding:32px;max-width:900px;margin:0 auto;width:100%}
+.page-header{margin-bottom:28px}
+.page-title{font-family:var(--serif);font-size:32px}
+.page-sub{color:var(--text2);font-size:14px;margin-top:4px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:24px;margin-bottom:20px}
+.card-title{font-size:16px;font-weight:500;margin-bottom:16px}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:11px 18px;font-size:14px;color:var(--text);z-index:9999;transform:translateY(10px);opacity:0;transition:all .3s;pointer-events:none;max-width:320px}
+.toast.show{transform:translateY(0);opacity:1}
+.toggle-label{display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;color:var(--text2)}
+.toggle-label input{display:none}
+.toggle-track{position:relative;width:34px;height:20px;background:var(--bg4);border-radius:10px;transition:background .2s;flex-shrink:0}
+.toggle-label input:checked+.toggle-track{background:var(--accent2)}
+.toggle-thumb{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s}
+.toggle-label input:checked+.toggle-track .toggle-thumb{transform:translateX(14px)}
+#view-chat{flex-direction:row}
+.chat-sidebar{width:280px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.sidebar-section{padding:16px 16px 14px;border-bottom:1px solid var(--border)}
+.sidebar-title{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:12px;font-weight:500}
+.mood-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.mood-btn{aspect-ratio:1;border-radius:8px;border:1px solid var(--border2);background:var(--bg3);font-size:18px;transition:all .2s;display:flex;align-items:center;justify-content:center}
+.mood-btn:hover{background:var(--bg4);transform:scale(1.1)}
+.mood-btn.selected{border-color:var(--accent);background:var(--accent-glow)}
+.current-mood{margin-top:10px;font-size:13px;color:var(--text2);min-height:18px}
+.quick-links{display:flex;flex-direction:column;gap:3px}
+.quick-link{padding:8px 10px;border-radius:8px;border:none;background:transparent;color:var(--text2);font-size:13px;text-align:left;transition:all .2s;display:flex;align-items:center;gap:8px}
+.quick-link:hover{background:var(--bg3);color:var(--text)}
+.ql-dot{width:7px;height:7px;border-radius:50%;background:var(--c,var(--accent));flex-shrink:0}
+.chat-main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.disclaimer-bar{padding:8px 20px;background:var(--amber-dim);border-bottom:1px solid rgba(251,191,36,.2);font-size:12px;color:var(--amber);flex-shrink:0;line-height:1.5}
+.chat-messages{flex:1;overflow-y:auto;padding:24px 20px;display:flex;flex-direction:column;gap:16px;scroll-behavior:smooth}
+.msg{display:flex;gap:10px}
+.msg.user{flex-direction:row-reverse;margin-left:auto;max-width:80%}
+.msg.ai{max-width:85%}
+.msg-avatar{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;margin-top:2px}
+.msg-avatar.ai{background:linear-gradient(135deg,var(--accent2),#5b21b6)}
+.msg-avatar.user{background:linear-gradient(135deg,#065f46,#0f766e)}
+.msg-content{display:flex;flex-direction:column;min-width:0}
+.msg-bubble{padding:12px 16px;border-radius:16px;font-size:14px;line-height:1.65;word-wrap:break-word}
+.msg.ai .msg-bubble{background:var(--bg3);border:1px solid var(--border);border-top-left-radius:4px;color:var(--text)}
+.msg.user .msg-bubble{background:linear-gradient(135deg,#4c1d95,#5b21b6);border-top-right-radius:4px;color:#f0eeff}
+.msg-time{font-size:11px;color:var(--text3);margin-top:4px}
+.msg.user .msg-time{text-align:right}
+.msg-bubble.crisis{background:var(--rose-dim)!important;border-color:rgba(251,113,133,.3)!important}
+.crisis-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;background:var(--rose-dim);border:1px solid rgba(251,113,133,.3);color:var(--rose);margin-bottom:8px}
+.activity-card{margin-top:10px;padding:13px 15px;background:var(--bg4);border-radius:10px;border:1px solid var(--border2)}
+.activity-title{font-size:12px;font-weight:500;color:var(--accent);margin-bottom:8px}
+.activity-steps{font-size:13px;color:var(--text2);line-height:1.7;white-space:pre-line}
+.typing-indicator{display:flex;gap:5px;align-items:center;padding:13px 16px;background:var(--bg3);border:1px solid var(--border);border-radius:16px;border-top-left-radius:4px;width:fit-content}
+.typing-dot{width:6px;height:6px;background:var(--text3);border-radius:50%;animation:bounce 1.2s ease-in-out infinite}
+.typing-dot:nth-child(2){animation-delay:.2s}
+.typing-dot:nth-child(3){animation-delay:.4s}
+.chat-input-area{padding:14px 20px;background:var(--bg2);border-top:1px solid var(--border);flex-shrink:0}
+.chat-input-row{display:flex;align-items:flex-end;gap:8px;background:var(--bg3);border:1px solid var(--border2);border-radius:16px;padding:10px 10px 10px 16px;transition:border-color .2s}
+.chat-input-row:focus-within{border-color:var(--accent)}
+#chat-input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:14px;resize:none;min-height:22px;max-height:120px;line-height:1.5}
+#chat-input::placeholder{color:var(--text3)}
+.input-actions{display:flex;gap:6px;align-items:flex-end}
+.btn-icon{width:36px;height:36px;border-radius:10px;border:none;background:var(--bg4);color:var(--text2);font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.btn-icon.listening{background:var(--rose-dim)!important;color:var(--rose)!important}
+.btn-send{width:36px;height:36px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--accent2),#5b21b6);color:#fff;display:flex;align-items:center;justify-content:center;transition:opacity .2s}
+.btn-send:hover{opacity:.9}
+#view-journal{overflow-y:auto}
+.journal-compose{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r2);padding:24px;margin-bottom:24px}
+.journal-compose-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.journal-date{font-size:13px;color:var(--text3)}
+.mood-tag{padding:4px 10px;border-radius:20px;background:var(--accent-glow);color:var(--accent);font-size:12px}
+#journal-textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-size:14px;line-height:1.7;padding:14px;resize:none;min-height:140px;outline:none;transition:border-color .2s}
+#journal-textarea:focus{border-color:var(--accent)}
+#journal-textarea::placeholder{color:var(--text3)}
+.journal-actions{display:flex;gap:10px;margin-top:12px;justify-content:flex-end}
+.journal-entries{display:flex;flex-direction:column;gap:14px}
+.journal-entry{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:20px}
+.entry-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.entry-meta{display:flex;align-items:center;gap:10px}
+.entry-date{font-size:12px;color:var(--text3)}
+.entry-mood{font-size:20px}
+.entry-text{font-size:14px;color:var(--text2);line-height:1.65}
+.entry-insight{margin-top:12px;padding:12px 14px;background:var(--accent-glow);border-radius:10px;border-left:3px solid var(--accent);font-size:13px;color:var(--accent);line-height:1.6}
+.entry-insight-label{font-size:11px;font-weight:500;margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em}
+.btn-delete-entry{padding:4px 10px;border-radius:6px;border:none;background:transparent;color:var(--text3);font-size:12px;transition:all .2s}
+.btn-delete-entry:hover{background:var(--rose-dim);color:var(--rose)}
+#view-habits{overflow-y:auto}
+.weekly-chart{display:flex;align-items:flex-end;gap:8px;height:90px}
+.week-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px}
+.week-bar{width:100%;border-radius:4px 4px 0 0;min-height:4px;transition:height .5s}
+.week-label{font-size:11px;color:var(--text3)}
+.habits-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin-bottom:20px}
+.habit-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:20px}
+.habit-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.habit-icon-wrap{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.habit-streak{font-size:12px;color:var(--amber)}
+.habit-name{font-size:15px;font-weight:500;margin-bottom:3px}
+.habit-goal{font-size:13px;color:var(--text3);margin-bottom:14px}
+.habit-input-row{display:flex;align-items:center;gap:8px}
+.habit-input{flex:1;padding:8px 12px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:14px;outline:none}
+.habit-input:focus{border-color:var(--accent)}
+.habit-unit{font-size:12px;color:var(--text3);white-space:nowrap}
+.btn-log{padding:8px 14px;border-radius:8px;border:none;background:var(--bg4);color:var(--text2);font-size:12px;transition:all .2s;white-space:nowrap}
+.btn-log:hover{background:var(--accent-glow);color:var(--accent)}
+.btn-log.logged{background:var(--teal-dim);color:var(--teal)}
+.progress-bar{margin-top:12px;height:4px;background:var(--bg4);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;border-radius:2px;transition:width .5s}
+.insight-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.insight-item:last-child{border-bottom:none}
+.insight-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.insight-text{font-size:14px;color:var(--text2);line-height:1.55}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+@media(max-width:700px){.chat-sidebar{display:none}.page-content{padding:20px 16px}.habits-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div id="auth-screen" class="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo"><div class="auth-logo-icon">🧠</div><span class="auth-logo-text">MindfulAI</span></div>
+    <h1 class="auth-title">Your Wellness Companion</h1>
+    <p class="auth-sub">A safe, private space for emotional support, mindful habits, and self-reflection.</p>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="setAuthTab('login')">Sign in</button>
+      <button class="auth-tab" id="tab-signup" onclick="setAuthTab('signup')">Create account</button>
+    </div>
+    <div id="auth-login-form">
+      <div class="field"><label>Email</label><input type="email" id="login-email" placeholder="you@email.com"/></div>
+      <div class="field"><label>Password</label><input type="password" id="login-pass" placeholder="••••••••"/></div>
+      <button class="btn-primary" onclick="doLogin()">Sign in</button>
+    </div>
+    <div id="auth-signup-form" class="hidden">
+      <div class="field"><label>Your name</label><input type="text" id="signup-name" placeholder="What should I call you?"/></div>
+      <div class="field"><label>Email</label><input type="email" id="signup-email" placeholder="you@email.com"/></div>
+      <div class="field"><label>Password</label><input type="password" id="signup-pass" placeholder="At least 6 characters"/></div>
+      <button class="btn-primary" onclick="doSignup()">Create account</button>
+    </div>
+    <p id="auth-error" class="auth-error hidden"></p>
+    <p class="auth-disclaimer">⚕️ MindfulAI is <strong>not a medical professional</strong>. For emergencies: <strong>iCall 9152987821</strong> | <strong>Vandrevala 1860-2662-345</strong></p>
+  </div>
+</div>
+
+<div id="app" class="hidden">
+  <nav class="app-nav">
+    <div class="nav-logo"><div class="nav-logo-icon">🧠</div><span class="nav-logo-text">MindfulAI</span></div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-view="chat" onclick="switchView('chat')">💬 Chat</button>
+      <button class="nav-tab" data-view="journal" onclick="switchView('journal')">📓 Journal</button>
+      <button class="nav-tab" data-view="habits" onclick="switchView('habits')">📊 Habits</button>
+    </div>
+    <div class="nav-user">
+      <div class="nav-avatar" id="nav-avatar">U</div>
+      <span class="nav-username" id="nav-username">User</span>
+      <button class="btn-logout" onclick="doLogout()">Sign out</button>
+    </div>
+  </nav>
+
+  <section class="view active" id="view-chat">
+    <aside class="chat-sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">How are you feeling?</div>
+        <div class="mood-grid">
+          <button class="mood-btn" onclick="selectMood('😊','Happy')">😊</button>
+          <button class="mood-btn" onclick="selectMood('😢','Sad')">😢</button>
+          <button class="mood-btn" onclick="selectMood('😤','Stressed')">😤</button>
+          <button class="mood-btn" onclick="selectMood('😰','Anxious')">😰</button>
+          <button class="mood-btn" onclick="selectMood('😡','Angry')">😡</button>
+        </div>
+        <div class="current-mood" id="current-mood-text">Tap to check in</div>
+      </div>
+      <div class="sidebar-section" style="flex:1;overflow-y:auto">
+        <div class="sidebar-title">Quick support</div>
+        <div class="quick-links">
+          <button class="quick-link" onclick="quickSend('I need a breathing exercise')"><span class="ql-dot" style="--c:#60a5fa"></span>Breathing exercise</button>
+          <button class="quick-link" onclick="quickSend('Guide me through a quick meditation')"><span class="ql-dot" style="--c:#34d399"></span>Quick meditation</button>
+          <button class="quick-link" onclick="quickSend('I need a grounding technique')"><span class="ql-dot" style="--c:#a78bfa"></span>Grounding technique</button>
+          <button class="quick-link" onclick="quickSend('I want to vent about my day')"><span class="ql-dot" style="--c:#fbbf24"></span>Vent about my day</button>
+          <button class="quick-link" onclick="quickSend('Help me with positive affirmations')"><span class="ql-dot" style="--c:#fb7185"></span>Positive affirmations</button>
+          <button class="quick-link" onclick="quickSend('What self-care can I do right now?')"><span class="ql-dot" style="--c:#34d399"></span>Self-care ideas</button>
+        </div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-title">Voice output</div>
+        <label class="toggle-label">
+          <input type="checkbox" id="tts-toggle" onchange="ttsEnabled=this.checked"/>
+          <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          Read replies aloud
+        </label>
+      </div>
+    </aside>
+    <div class="chat-main">
+      <div class="disclaimer-bar">⚕️ <strong>Not a medical professional.</strong> Crisis? iCall: <strong>9152987821</strong> | Vandrevala: <strong>1860-2662-345</strong> | NIMHANS: <strong>080-46110007</strong></div>
+      <div class="chat-messages" id="chat-messages"></div>
+      <div class="chat-input-area">
+        <div class="chat-input-row">
+          <textarea id="chat-input" placeholder="Share what's on your mind…" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+          <div class="input-actions">
+            <button class="btn-icon" id="btn-voice" onclick="toggleVoice()">🎤</button>
+            <button class="btn-send" onclick="sendMessage()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-journal">
+    <div class="page-content">
+      <div class="page-header"><h1 class="page-title">My Journal</h1><p class="page-sub">A private space to reflect on thoughts and feelings</p></div>
+      <div class="journal-compose">
+        <div class="journal-compose-header">
+          <span class="journal-date" id="journal-date"></span>
+          <span class="mood-tag" id="journal-mood-tag">No mood set</span>
+        </div>
+        <textarea id="journal-textarea" placeholder="What's on your mind today? Write freely…" rows="6"></textarea>
+        <div class="journal-actions">
+          <button class="btn-secondary" onclick="saveJournal()">💾 Save entry</button>
+          <button class="btn-analyze" onclick="analyzeJournal()">✨ Get Reflection</button>
+        </div>
+      </div>
+      <div class="journal-entries" id="journal-entries"><div class="empty-state">Your journal entries will appear here ✍️</div></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-habits">
+    <div class="page-content">
+      <div class="page-header"><h1 class="page-title">Habit Tracker</h1><p class="page-sub">Build consistency, one day at a time</p></div>
+      <div class="card"><div class="card-title">This week</div><div class="weekly-chart" id="weekly-chart"></div></div>
+      <div class="habits-grid" id="habits-grid"></div>
+      <div class="card"><div class="card-title">🔍 Today's Insights</div><div id="insights-list"></div></div>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  BUILT-IN AI ENGINE — No API needed, works offline!
+//  Smart rule-based responses with emotion detection,
+//  context awareness, and personalized wellness support.
+// ══════════════════════════════════════════════════════
+
+const MindfulEngine = (() => {
+
+  // Emotion detection patterns
+  const EMOTIONS = {
+    sad:      /\b(sad|unhappy|depress|cry|crying|hopeless|lonely|miserable|grief|heartbroken|devastated|blue|down|low|upset|hurt|broken|empty|lost|pain|suffer)\b/i,
+    anxious:  /\b(anxi|worry|worri|nervous|panic|scared|fear|dread|overwhelm|uneasy|tense|restless|apprehens|jitter|on edge|cant sleep|can't sleep|racing thoughts)\b/i,
+    stressed: /\b(stress|pressure|burden|exhaust|burnout|overload|drained|overwhelm|frantic|chaos|hectic|swamp|too much|so much|deadline|work)\b/i,
+    angry:    /\b(angry|anger|furious|rage|mad|irritat|frustrat|annoyed|resent|hate|livid|fuming|aggravat|upset|unfair)\b/i,
+    happy:    /\b(happy|joyful|excited|great|wonderful|fantastic|elated|cheerful|content|grateful|blessed|thrilled|amazing|good|better|awesome|love)\b/i,
+    lonely:   /\b(lonely|alone|isolated|no one|nobody|friend|connection|miss|missing)\b/i,
+    tired:    /\b(tired|exhausted|sleepy|fatigue|worn out|no energy|drained|weak)\b/i,
+  };
+
+  const CRISIS = ["suicide","suicidal","kill myself","end my life","want to die","self harm","self-harm","cut myself","overdose","not worth living","hurt myself","end it all","no point living"];
+
+  // Response templates — varied so they don't feel repetitive
+  const RESPONSES = {
+    greeting: [
+      n => `Hello ${n}! 😊 I'm so glad you're here. How are you feeling today? I'm all ears — whether you want to talk, need a breathing exercise, or just want someone to listen.`,
+      n => `Hey ${n}! 💜 Welcome back. I'm here for you. What's on your mind today?`,
+      n => `Hi ${n}! 🌟 It's good to see you. How has your day been treating you?`,
+    ],
+    sad: [
+      n => `I hear you, ${n}, and I want you to know — what you're feeling is completely valid. Sadness can feel so heavy sometimes.\n\nWould you like to tell me more about what's been going on? Sometimes just putting it into words can help lighten the load a little.\n\nI'm right here with you. 💙`,
+      n => `Thank you for sharing that with me, ${n}. Feeling sad is a real and human experience — please don't judge yourself for it.\n\nYou don't have to carry this alone. What's been weighing on your heart lately?`,
+      n => `${n}, I'm sorry you're going through this. Sadness can feel isolating, but you reached out — and that takes courage.\n\nWould a gentle breathing exercise help right now, or would you rather just talk? I'm here either way. 💙`,
+    ],
+    anxious: [
+      n => `I can hear that things feel overwhelming right now, ${n}. Anxiety has a way of making everything feel urgent at once.\n\nLet's slow things down together. Try this with me:\n\n**Box Breathing:**\n• Breathe IN for 4 counts\n• HOLD for 4 counts\n• Breathe OUT for 4 counts\n• HOLD for 4 counts\n\nRepeat 3-4 times. How does that feel? 🌿`,
+      n => `${n}, when anxiety hits, it can feel like the walls are closing in. You're not alone in this.\n\nLet's try grounding yourself right now. Look around and name:\n👁 5 things you can **see**\n🤚 4 things you can **touch**\n👂 3 things you can **hear**\n\nThis brings your mind back to the present moment. 🌱`,
+      n => `Anxiety can be so draining, ${n}. Your feelings are real and valid.\n\nOne thing that helps many people: place one hand on your chest, one on your belly. Take a slow breath so only your belly hand moves. This activates your body's calm response.\n\nWhat's been triggering the anxiety? I'm listening. 💜`,
+    ],
+    stressed: [
+      n => `It sounds like you're carrying a lot right now, ${n}. Stress has a way of building up without us noticing until it becomes overwhelming.\n\nLet's take one breath together — in through the nose for 4 counts, out through the mouth for 6. The longer exhale activates your parasympathetic nervous system.\n\nWhat's the biggest thing stressing you out right now? 🧘`,
+      n => `${n}, stress is your body's way of saying "this matters to me" — but too much of it is harmful. You're right to pause and check in.\n\nHere's a quick reset: stand up, shake your hands out, roll your shoulders back 3 times. Sometimes the body needs to release before the mind can.\n\nWhat's been piling up lately?`,
+      n => `I hear you, ${n}. When everything feels urgent at once, even breathing feels hard.\n\nTry this: write down the 3 most important things you need to do today — just 3. Everything else can wait. This simple act tells your brain what's actually urgent vs what just feels urgent.\n\nWhat's on your plate right now? 💪`,
+    ],
+    angry: [
+      n => `${n}, I hear you — and it's completely okay to feel angry. Anger is a valid emotion that often tells us something important: that a boundary was crossed, or something we care about was threatened.\n\nBefore we dive in — take one big breath in through the nose, and a slow exhale through the mouth. Just one.\n\nNow, what happened? I want to hear your side. 🔥`,
+      n => `Anger is energy, ${n} — and you're allowed to feel it. What you're feeling makes sense.\n\nSometimes it helps to move the energy through your body: a brisk walk, jumping jacks, or even just shaking your arms out. It literally releases the physical tension anger creates.\n\nTell me what's going on? I'm not here to judge — just to listen. 💜`,
+      n => `I can feel the frustration in your words, ${n}. That's a real feeling and it deserves to be heard.\n\nHere's something that helps: write down exactly what happened and how it made you feel — uncensored. You don't have to share it with anyone. Getting it out of your head and onto paper can release some of that pressure.\n\nWhat triggered this? 💬`,
+    ],
+    happy: [
+      n => `${n}, I love hearing this! 🌟 That positive energy is worth celebrating.\n\nDid you know that savoring positive moments — really pausing to appreciate them — actually strengthens your emotional resilience over time?\n\nWhat's brought this good feeling? I'd love to hear about it! 😊`,
+      n => `That's wonderful, ${n}! 🎉 Hold onto this feeling — you deserve it.\n\nA great practice when you're feeling good: write down 3 things you're grateful for right now. It anchors the positive feeling and trains your brain to notice the good more often.\n\nWhat's made today special? ✨`,
+      n => `I'm so glad to hear that, ${n}! 🌈 Good days are precious.\n\nWant to make it even better? Do one small kind thing for yourself today — even just a cup of tea, a walk outside, or 10 minutes of your favorite music. You deserve to savor this. 💜`,
+    ],
+    lonely: [
+      n => `${n}, loneliness can feel so heavy. I want you to know — reaching out here, even to me, is a meaningful step. You're not as alone as it feels.\n\nConnection is a fundamental human need. What does connection look like for you? Is there someone you've been meaning to reach out to?\n\nI'm here to talk as long as you need. 💙`,
+      n => `Feeling lonely is one of the most painful human experiences, ${n}. And it's more common than people admit.\n\nSometimes loneliness is telling us we need more meaningful connection — not just more people, but deeper conversations. Like this one.\n\nWhat kind of connection do you crave most right now? 🤝`,
+    ],
+    tired: [
+      n => `${n}, exhaustion is your body asking for rest — and that's not weakness, it's wisdom.\n\nAre you getting enough sleep? Even 7 hours consistently makes a huge difference in mood, focus, and emotional resilience. Your brain literally cleans itself during deep sleep.\n\nWhat's been draining your energy lately? 😴`,
+      n => `Being tired all the time, ${n}, can make everything feel harder — emotions included. Sometimes fatigue is physical; sometimes it's emotional exhaustion from carrying too much.\n\nWhat does rest look like for you? Not just sleep, but true restoration — what fills you back up? 🌙`,
+    ],
+    breathing: [
+      () => `Let's do this together. Find a comfortable position and follow along:\n\n**4-7-8 Breathing:**\n1. Breathe IN through your nose for **4 counts**\n2. HOLD your breath for **7 counts**\n3. Breathe OUT through your mouth for **8 counts**\n\nRepeat this 4 times. The extended exhale activates your body's calm response.\n\nHow do you feel after trying it? 🌿`,
+      () => `Here's a simple but powerful technique:\n\n**Box Breathing** (used by Navy SEALs to stay calm under pressure):\n\n⬆️ Breathe IN — 4 counts\n➡️ HOLD — 4 counts\n⬇️ Breathe OUT — 4 counts\n⬅️ HOLD — 4 counts\n\nImagine drawing a box as you breathe. Do this 4-6 rounds.\n\nTake your time — I'll be here when you're done. 💜`,
+    ],
+    meditation: [
+      () => `Let's do a quick 2-minute body scan meditation:\n\n1. Close your eyes and take 3 deep breaths\n2. Start at the top of your head — notice any tension\n3. Slowly move your attention down: forehead, jaw, neck, shoulders\n4. Let each area soften as you breathe into it\n5. Continue down through your chest, belly, arms, hands\n6. Finish at your feet — feel the ground beneath you\n\nOpen your eyes when you're ready. How do you feel? 🧘`,
+      () => `Here's a mindfulness exercise for right now:\n\n**5 Senses Check-In:**\n\n👁 Look around — what's the most beautiful thing you can see?\n👂 Listen — what sounds can you hear?\n🤚 Touch something near you — what does it feel like?\n👃 What can you smell right now?\n💭 What's one thing you appreciate in this moment?\n\nThis practice anchors you in the present. 🌱`,
+    ],
+    grounding: [
+      () => `The 5-4-3-2-1 grounding technique brings you back to the present moment:\n\n👁 Name **5 things** you can SEE\n🤚 Name **4 things** you can TOUCH or feel\n👂 Name **3 things** you can HEAR\n👃 Name **2 things** you can SMELL\n👅 Name **1 thing** you can TASTE\n\nTake your time with each one. This interrupts the anxiety loop and signals safety to your nervous system. 🌿`,
+    ],
+    affirmations: [
+      n => `Here are some affirmations just for you, ${n}:\n\n💜 "I am doing the best I can, and that is enough."\n🌟 "My feelings are valid and I am allowed to feel them."\n💪 "I have overcome difficult things before and I will again."\n🌱 "I am worthy of love, care, and good things."\n✨ "This feeling is temporary. I am stronger than I know."\n\nChoose one that resonates and repeat it to yourself 3 times. Which one speaks to you most? 💙`,
+    ],
+    selfcare: [
+      n => `Here are some self-care ideas for you right now, ${n}:\n\n🌊 **Quick (5 mins):** Wash your face with cold water, step outside for fresh air, make a warm drink\n\n🌿 **Medium (20 mins):** Take a walk, do some gentle stretching, write in your journal, listen to a calming playlist\n\n💜 **Deeper (1 hour):** Take a bath, cook something nourishing, call someone who makes you feel good, watch something comforting\n\nWhat feels most doable right now? 🌸`,
+    ],
+    vent: [
+      n => `I'm here, ${n}. Go ahead — let it all out. This is a safe space and nothing you say will be judged.\n\nWhat's been building up? I'm listening with my full attention. 💙`,
+      n => `${n}, sometimes we just need someone to hear us — not fix anything, just listen. I'm that someone right now.\n\nTell me everything. What's been going on? 💜`,
+    ],
+    crisis: [
+      n => `${n}, I hear you — and I'm so glad you're still here talking to me. What you're feeling right now is real, and you matter deeply.\n\nPlease reach out to someone who can be with you through this:\n\n📞 **iCall: 9152987821**\n📞 **Vandrevala Foundation: 1860-2662-345**\n📞 **NIMHANS: 080-46110007**\n\nThese are free, confidential, and available now. You don't have to go through this alone. I care about you. 💙`,
+    ],
+    default: [
+      n => `Thank you for sharing that with me, ${n}. I'm here and I'm listening.\n\nCan you tell me a little more about what's going on? I want to make sure I understand what you're going through. 💜`,
+      n => `I hear you, ${n}. What you're feeling matters, and I want to understand better.\n\nWhat's been on your mind most today? 💙`,
+      n => `${n}, I'm glad you reached out. How long have you been feeling this way?\n\nSometimes talking through it helps us understand what we really need. I'm here to listen without judgment. 🌿`,
+      n => `That sounds like a lot to carry, ${n}. You're not alone in this.\n\nWhat would feel most helpful right now — talking it through, a calming exercise, or something else? I'm here for whatever you need. 💜`,
+      n => `I appreciate you opening up, ${n}. It takes courage to talk about how we're really feeling.\n\nWould you like to explore some ways to feel a little better right now? Or do you just need to be heard? Either is completely fine. 🌸`,
+    ],
+    followup: [
+      "How are you feeling after talking about that? 💙",
+      "Is there anything else on your mind you'd like to share? 🌿",
+      "What do you think you need most right now? 💜",
+      "Would a breathing exercise or grounding technique be helpful right now? 🧘",
+      "How has your sleep been lately? Rest affects everything — our emotions, energy, and perspective. 😴",
+      "On a scale of 1-10, how would you rate your mood today? 🌟",
+      "Is there one small thing you could do for yourself today to feel a little better? 🌸",
+    ]
+  };
+
+  let msgCount = 0;
+
+  function detectEmotion(text) {
+    const t = text.toLowerCase();
+    for (const [emotion, pattern] of Object.entries(EMOTIONS)) {
+      if (pattern.test(t)) return emotion;
+    }
+    return "neutral";
+  }
+
+  function detectCrisis(text) {
+    const t = text.toLowerCase();
+    return CRISIS.some(w => t.includes(w));
+  }
+
+  function pick(arr, name) {
+    const item = arr[Math.floor(Math.random() * arr.length)];
+    return typeof item === 'function' ? item(name) : item;
+  }
+
+  function getJournalReflection(text) {
+    const emotion = detectEmotion(text);
+    const reflections = {
+      sad: [
+        "Your words carry real pain, and that's okay — pain is part of being human. It takes courage to put these feelings into words. What does this sadness need from you right now — rest, expression, or connection?",
+        "I notice a heaviness in what you've written. That's valid. Often when we write about sadness, we discover what's really underneath it. What do you think is at the core of this feeling?",
+      ],
+      anxious: [
+        "There's a lot of worry in these words. Remember: you've navigated hard things before — your track record for getting through difficult days is 100%. What's one thing that's actually within your control right now?",
+        "Your mind seems to be working overtime. That's exhausting. Sometimes anxiety is our mind trying to protect us — what is it trying to protect you from?",
+      ],
+      stressed: [
+        "It sounds like you're carrying more than one person should. What would it feel like to put one thing down, just temporarily? What's the one thing you most need to release?",
+        "There's real pressure in your words. You're clearly someone who cares deeply — about doing well, about others. That same caring nature deserves to be turned inward sometimes.",
+      ],
+      happy: [
+        "There's genuine joy in these words — hold onto this! Moments of happiness are worth savoring and revisiting. What made today feel different? Can you create more of that?",
+        "Reading this made me smile. You deserve these good moments. What do you think contributed to feeling this way today?",
+      ],
+      angry: [
+        "Your frustration is completely understandable. Anger often points to something important — a boundary crossed, a value threatened. What does this anger want you to know?",
+        "There's fire in your words, and that fire is telling you something. What boundary needs to be set? What do you need to protect?",
+      ],
+      neutral: [
+        "Writing is itself an act of self-care. Just taking time to reflect shows self-awareness. What's one thing you learned about yourself from writing this entry today?",
+        "Thank you for taking time to check in with yourself. Reflection is a powerful practice. Is there a pattern you notice in how you've been feeling lately?",
+        "There's something valuable in every entry — the act of noticing. What would you want your future self to remember about today?",
+      ]
+    };
+    const pool = reflections[emotion] || reflections.neutral;
+    return pick(pool, "");
+  }
+
+  function respond(text, userName) {
+    const t = text.toLowerCase().trim();
+    const name = userName || "friend";
+    msgCount++;
+
+    // Crisis check — always first
+    if (detectCrisis(t)) return { text: pick(RESPONSES.crisis, name), crisis: true };
+
+    // Greetings
+    if (/^(hi|hello|hey|good morning|good evening|good afternoon|howdy|sup|hiya)[\s!?.,]*$/.test(t)) {
+      return { text: pick(RESPONSES.greeting, name) };
+    }
+
+    // Specific requests
+    if (/breath|breathing exercise|breathe/.test(t)) return { text: pick(RESPONSES.breathing, name), activity: { title: "Breathing Exercise", steps: "Follow the steps in my message above 🌿" } };
+    if (/meditat/.test(t)) return { text: pick(RESPONSES.meditation, name) };
+    if (/ground/.test(t)) return { text: pick(RESPONSES.grounding, name) };
+    if (/affirmation/.test(t)) return { text: pick(RESPONSES.affirmations, name) };
+    if (/self.?care|self care|take care|care for myself/.test(t)) return { text: pick(RESPONSES.selfcare, name) };
+    if (/vent|talk|listen|hear me/.test(t)) return { text: pick(RESPONSES.vent, name) };
+
+    // How are you type questions
+    if (/how are you|you okay|you good/.test(t)) {
+      return { text: `I'm here and fully focused on you, ${name}! 💜 More importantly — how are YOU? What's going on in your world today?` };
+    }
+
+    // Thank you
+    if (/^(thank|thanks|thank you|ty|thx)/.test(t)) {
+      return { text: `You're so welcome, ${name}. 💙 I'm always here whenever you need to talk, vent, or just have some company. Is there anything else on your mind?` };
+    }
+
+    // Emotion-based responses
+    const emotion = detectEmotion(t);
+    if (emotion !== "neutral" && RESPONSES[emotion]) {
+      return { text: pick(RESPONSES[emotion], name) };
+    }
+
+    // Contextual follow-up every few messages
+    if (msgCount % 4 === 0) {
+      return { text: pick(RESPONSES.default, name) + "\n\n" + pick(RESPONSES.followup, name) };
+    }
+
+    return { text: pick(RESPONSES.default, name) };
+  }
+
+  return { respond, detectEmotion, detectCrisis, getJournalReflection };
+})();
+
+// ══════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════
+let currentUser = null, currentMood = null, ttsEnabled = false;
+let isRecording = false, recognition = null;
+
+// ══════════════════════════════════════
+//  BACKEND API
+// ══════════════════════════════════════
+const BASE = "/api";
+const getToken = () => localStorage.getItem("mf_token");
+const setToken = t => localStorage.setItem("mf_token", t);
+const clearToken = () => localStorage.removeItem("mf_token");
+
+async function apiReq(method, path, body=null) {
+  const h = {"Content-Type":"application/json"};
+  const t = getToken(); if(t) h["Authorization"]="Bearer "+t;
+  const r = await fetch(BASE+path,{method,headers:h,body:body?JSON.stringify(body):null});
+  const d = await r.json().catch(()=>({}));
+  if(!r.ok) throw new Error(d.error||"HTTP "+r.status);
+  return d;
+}
+
+// ══════════════════════════════════════
+//  AUTH
+// ══════════════════════════════════════
+function setAuthTab(tab) {
+  ["login","signup"].forEach(t=>{
+    document.getElementById("tab-"+t).classList.toggle("active",t===tab);
+    document.getElementById("auth-"+t+"-form").classList.toggle("hidden",t!==tab);
+  });
+  document.getElementById("auth-error").classList.add("hidden");
+}
+
+async function doLogin() {
+  const email=document.getElementById("login-email").value.trim();
+  const pass=document.getElementById("login-pass").value;
+  if(!email||!pass){showErr("Please fill in all fields.");return;}
+  try{const d=await apiReq("POST","/auth/login",{email,password:pass});setToken(d.token);boot(d.user);}
+  catch(e){showErr(e.message||"Login failed.");}
+}
+
+async function doSignup() {
+  const name=document.getElementById("signup-name").value.trim();
+  const email=document.getElementById("signup-email").value.trim();
+  const pass=document.getElementById("signup-pass").value;
+  if(!name||!email||!pass){showErr("Please fill in all fields.");return;}
+  if(pass.length<6){showErr("Password must be at least 6 characters.");return;}
+  try{const d=await apiReq("POST","/auth/register",{name,email,password:pass});setToken(d.token);boot(d.user);}
+  catch(e){showErr(e.message||"Signup failed.");}
+}
+
+function doLogout() {
+  clearToken();currentUser=null;
+  document.getElementById("app").classList.add("hidden");
+  document.getElementById("auth-screen").style.display="flex";
+  document.getElementById("chat-messages").innerHTML="";
+}
+
+function showErr(m){const e=document.getElementById("auth-error");e.textContent=m;e.classList.remove("hidden");}
+
+function boot(user) {
+  currentUser=user;
+  document.getElementById("auth-screen").style.display="none";
+  document.getElementById("app").classList.remove("hidden");
+  document.getElementById("nav-avatar").textContent=user.name[0].toUpperCase();
+  document.getElementById("nav-username").textContent=user.name;
+  document.getElementById("journal-date").textContent=new Date().toLocaleDateString("en-IN",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+  initChat();renderHabits();loadJournal();
+}
+
+async function restoreSession() {
+  if(!getToken())return;
+  try{const d=await apiReq("GET","/auth/me");boot(d.user);}catch{clearToken();}
+}
+
+// ══════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════
+function switchView(v) {
+  document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));
+  document.querySelectorAll(".nav-tab").forEach(x=>x.classList.remove("active"));
+  document.getElementById("view-"+v).classList.add("active");
+  document.querySelector("[data-view='"+v+"']").classList.add("active");
+  if(v==="habits")renderHabits();
+}
+
+// ══════════════════════════════════════
+//  MOOD
+// ══════════════════════════════════════
+function selectMood(emoji,label) {
+  currentMood={emoji,label};
+  document.querySelectorAll(".mood-btn").forEach(b=>b.classList.toggle("selected",b.textContent===emoji));
+  document.getElementById("current-mood-text").textContent="Feeling "+label.toLowerCase()+" "+emoji;
+  document.getElementById("journal-mood-tag").textContent=emoji+" "+label;
+  apiReq("POST","/habits/mood",{mood:emoji,label}).catch(()=>{});
+}
+
+// ══════════════════════════════════════
+//  CHAT
+// ══════════════════════════════════════
+async function initChat() {
+  const c=document.getElementById("chat-messages");
+  c.innerHTML="";
+  try {
+    const d=await apiReq("GET","/chat/history?limit=20");
+    if(d.messages?.length){
+      d.messages.forEach(m=>addBubble(m.role==="assistant"?"assistant":"user",m.content,m.created_at,false));
+      scrollBot();return;
+    }
+  }catch{}
+  const w=`Hello ${currentUser.name} 👋 I'm MindfulAI, your wellness companion.\n\nI'm here to listen, support, and guide you — whether you want to talk about how you're feeling, try a breathing exercise, or just need someone to be with you for a moment.\n\nHow are you doing today?`;
+  addBubble("assistant",w,new Date().toISOString(),true);
+  saveMsg("assistant",w);
+}
+
+async function sendMessage() {
+  const inp=document.getElementById("chat-input");
+  const text=inp.value.trim();
+  if(!text||!currentUser)return;
+  inp.value="";autoResize(inp);
+  addBubble("user",text,new Date().toISOString(),true);
+  saveMsg("user",text);
+  const te=showTyping();
+  // Simulate thinking time for natural feel
+  const delay=800+Math.random()*800;
+  setTimeout(()=>{
+    te.remove();
+    const result=MindfulEngine.respond(text,currentUser.name);
+    addBubble("assistant",result.text,new Date().toISOString(),true,result.activity,result.crisis);
+    saveMsg("assistant",result.text);
+    if(ttsEnabled)speak(result.text);
+  },delay);
+}
+
+function saveMsg(role,content) {
+  if(role==="user"){
+    apiReq("POST","/chat/message",{message:content,mood:currentMood?currentMood.emoji+" "+currentMood.label:null}).catch(()=>{});
+  }else{
+    apiReq("POST","/chat/save_reply",{reply:content,emotion:"neutral"}).catch(()=>{});
+  }
+}
+
+function quickSend(t){document.getElementById("chat-input").value=t;sendMessage();}
+function handleKey(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();}}
+
+function addBubble(role,content,ts,animate,activity,crisis) {
+  const c=document.getElementById("chat-messages"),isAI=role==="assistant";
+  const w=document.createElement("div");w.className="msg "+(isAI?"ai":"user");
+  if(animate){w.style.opacity="0";w.style.transform="translateY(8px)";}
+  const time=ts?new Date(ts).toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"}):"";
+  const av=isAI?"🧠":(currentUser?.name?.[0]?.toUpperCase()||"U");
+  let inner="";
+  if(crisis&&isAI)inner+='<div class="crisis-badge">🆘 Crisis support</div>';
+  inner+="<div>"+fmt(content)+"</div>";
+  if(activity)inner+='<div class="activity-card"><div class="activity-title">✨ '+activity.title+'</div><div class="activity-steps">'+activity.steps+'</div></div>';
+  w.innerHTML='<div class="msg-avatar '+(isAI?"ai":"user")+'">'+av+'</div><div class="msg-content"><div class="msg-bubble'+(crisis&&isAI?" crisis":"")+'">'+inner+'</div><div class="msg-time">'+time+"</div></div>";
+  c.appendChild(w);
+  if(animate){requestAnimationFrame(()=>{w.style.transition="opacity .3s,transform .3s";w.style.opacity="1";w.style.transform="translateY(0)";});scrollBot();}
+}
+
+function fmt(t) {
+  if(!t)return"";
+  return t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>")
+    .replace(/\*(.*?)\*/g,"<em>$1</em>")
+    .replace(/\n\n/g,"</p><p style='margin-top:8px'>")
+    .replace(/\n/g,"<br>");
+}
+
+function showTyping() {
+  const c=document.getElementById("chat-messages"),el=document.createElement("div");
+  el.className="msg ai";
+  el.innerHTML='<div class="msg-avatar ai">🧠</div><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>';
+  c.appendChild(el);scrollBot();return el;
+}
+
+function scrollBot(){const c=document.getElementById("chat-messages");c.scrollTop=c.scrollHeight;}
+
+// ══════════════════════════════════════
+//  VOICE
+// ══════════════════════════════════════
+function toggleVoice() {
+  const btn=document.getElementById("btn-voice");
+  if(isRecording){recognition?.stop();isRecording=false;btn.textContent="🎤";btn.classList.remove("listening");return;}
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){showToast("Voice not supported. Use Chrome or Edge.");return;}
+  recognition=new SR();recognition.lang="en-IN";recognition.continuous=false;recognition.interimResults=true;
+  recognition.onstart=()=>{isRecording=true;btn.textContent="⏹";btn.classList.add("listening");showToast("Listening… 🎤");};
+  recognition.onresult=e=>{const t=Array.from(e.results).map(r=>r[0].transcript).join("");document.getElementById("chat-input").value=t;autoResize(document.getElementById("chat-input"));};
+  recognition.onend=()=>{isRecording=false;btn.textContent="🎤";btn.classList.remove("listening");const t=document.getElementById("chat-input").value.trim();if(t)setTimeout(sendMessage,350);};
+  recognition.onerror=()=>{isRecording=false;btn.textContent="🎤";btn.classList.remove("listening");};
+  recognition.start();
+}
+
+function speak(text) {
+  if(!ttsEnabled||!window.speechSynthesis)return;
+  const clean=text.replace(/\*\*(.*?)\*\*/g,"$1").replace(/<[^>]+>/g,"").trim();
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(clean);u.lang="en-IN";u.rate=0.93;
+  const v=window.speechSynthesis.getVoices();
+  const p=v.find(x=>x.lang.startsWith("en-IN"))||v.find(x=>x.lang.startsWith("en"));
+  if(p)u.voice=p;window.speechSynthesis.speak(u);
+}
+
+// ══════════════════════════════════════
+//  JOURNAL
+// ══════════════════════════════════════
+async function saveJournal() {
+  const content=document.getElementById("journal-textarea").value.trim();
+  if(!content){showToast("Write something first ✍️");return;}
+  const mood=currentMood?currentMood.emoji+" "+currentMood.label:null;
+  try{
+    await apiReq("POST","/journal/",{content,mood});
+    document.getElementById("journal-textarea").value="";
+    await loadJournal();showToast("Entry saved ✓");
+  }catch(e){showToast("Failed: "+e.message);}
+}
+
+async function analyzeJournal() {
+  const content=document.getElementById("journal-textarea").value.trim();
+  if(!content){showToast("Write something first ✍️");return;}
+  const btn=document.querySelector(".btn-analyze");btn.textContent="⏳ Reflecting…";btn.disabled=true;
+  const mood=currentMood?currentMood.emoji+" "+currentMood.label:null;
+  // Use built-in reflection engine
+  const insight=MindfulEngine.getJournalReflection(content);
+  try{
+    await apiReq("POST","/journal/",{content,mood,ai_insight:insight});
+    document.getElementById("journal-textarea").value="";
+    await loadJournal();showToast("Reflection added ✨");
+  }catch(e){showToast("Failed: "+e.message);}
+  finally{btn.textContent="✨ Get Reflection";btn.disabled=false;}
+}
+
+async function deleteJournalEntry(id) {
+  if(!confirm("Delete this entry?"))return;
+  try{await apiReq("DELETE","/journal/"+id);await loadJournal();showToast("Deleted");}
+  catch(e){showToast("Delete failed: "+e.message);}
+}
+
+async function genInsight(id) {
+  showToast("Generating reflection…");
+  try{
+    const entry=await apiReq("GET","/journal/"+id);
+    const insight=MindfulEngine.getJournalReflection(entry.entry.content);
+    await apiReq("POST","/journal/"+id+"/insight",{insight});
+    await loadJournal();showToast("Reflection added ✨");
+  }catch(e){showToast("Could not generate: "+e.message);}
+}
+
+async function loadJournal() {
+  const c=document.getElementById("journal-entries");
+  try{
+    const d=await apiReq("GET","/journal/?page=1");
+    if(!d.entries?.length){c.innerHTML='<div class="empty-state">Your journal entries will appear here ✍️</div>';return;}
+    c.innerHTML=d.entries.map(e=>{
+      const date=new Date(e.created_at).toLocaleDateString("en-IN",{weekday:"short",month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"});
+      const ins=e.ai_insight
+        ?'<div class="entry-insight"><div class="entry-insight-label">✨ Reflection</div>'+esc(e.ai_insight)+"</div>"
+        :'<button class="btn-secondary" style="margin-top:10px;font-size:12px" onclick="genInsight('+e.id+')">✨ Get reflection</button>';
+      return '<div class="journal-entry"><div class="entry-header"><div class="entry-meta"><span class="entry-mood">'+(e.mood?.split(" ")[0]||"📝")+'</span><span class="entry-date">'+date+'</span></div><button class="btn-delete-entry" onclick="deleteJournalEntry('+e.id+')">🗑</button></div><div class="entry-text">'+esc(e.content)+"</div>"+ins+"</div>";
+    }).join("");
+  }catch{c.innerHTML='<div class="empty-state">Could not load entries.</div>';}
+}
+
+function esc(s){return(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g,"<br>");}
+
+// ══════════════════════════════════════
+//  HABITS
+// ══════════════════════════════════════
+async function renderHabits(){await Promise.all([renderCards(),renderChart(),renderInsights()]);}
+
+async function renderCards() {
+  const g=document.getElementById("habits-grid");
+  try{
+    const d=await apiReq("GET","/habits/");
+    if(!d.habits?.length){g.innerHTML='<div class="empty-state">No habits found.</div>';return;}
+    const col={sleep:{c:"#7c3aed",bg:"rgba(124,58,237,.15)"},water:{c:"#0ea5e9",bg:"rgba(14,165,233,.15)"},exercise:{c:"#10b981",bg:"rgba(16,185,129,.15)"},mood:{c:"#f59e0b",bg:"rgba(245,158,11,.15)"},screen:{c:"#ef4444",bg:"rgba(239,68,68,.15)"}};
+    g.innerHTML=d.habits.map(h=>{
+      const th=col[h.key]||{c:"#a78bfa",bg:"rgba(167,139,250,.15)"};
+      const pct=h.progress_pct||0,logged=(h.today_value||0)>0;
+      const goal=h.invert?"Max "+h.goal+" "+h.unit+(h.today_value?" · Logged: "+h.today_value:""):"Goal: "+h.goal+" "+h.unit+(h.today_value?" · Logged: "+h.today_value:"");
+      return '<div class="habit-card"><div class="habit-card-header"><div class="habit-icon-wrap" style="background:'+th.bg+';color:'+th.c+'">'+h.icon+'</div><div class="habit-streak">🔥 '+h.streak+'d streak</div></div><div class="habit-name">'+h.name+'</div><div class="habit-goal">'+goal+'</div><div class="habit-input-row"><input type="number" min="0" step="0.5" class="habit-input" id="hi-'+h.key+'" value="'+(h.today_value||"")+'" placeholder="0"/><span class="habit-unit">'+h.unit+'</span><button class="btn-log'+(logged?" logged":"")+'" onclick="logHabit(\''+h.key+'\')">'+(logged?"✓ Logged":"Log")+'</button></div><div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%;background:'+th.c+'"></div></div></div>';
+    }).join("");
+  }catch{g.innerHTML='<div class="empty-state">Could not load habits.</div>';}
+}
+
+async function logHabit(key) {
+  const val=parseFloat(document.getElementById("hi-"+key).value);
+  if(isNaN(val)||val<0){showToast("Enter a valid number");return;}
+  try{await apiReq("POST","/habits/log",{habit_key:key,value:val});showToast("Logged ✓");await renderHabits();}
+  catch(e){showToast("Could not log: "+e.message);}
+}
+
+async function renderChart() {
+  const c=document.getElementById("weekly-chart");
+  try{
+    const d=await apiReq("GET","/habits/summary"),today=new Date().toISOString().slice(0,10);
+    c.innerHTML=(d.summary||[]).map(d=>{
+      const h=Math.max(4,(d.percent/100)*72),col=d.percent>=60?"#34d399":d.percent>=30?"#f59e0b":"#3a3d4a",it=d.date===today;
+      return '<div class="week-bar-wrap"><div class="week-bar" style="height:'+h+'px;background:'+col+(it?";outline:2px solid #a78bfa;outline-offset:2px":"")+'"></div><div class="week-label" style="'+(it?"color:var(--accent)":"")+'">'+d.day_label+"</div></div>";
+    }).join("");
+  }catch{c.innerHTML="";}
+}
+
+async function renderInsights() {
+  const l=document.getElementById("insights-list");
+  try{
+    const d=await apiReq("GET","/habits/insights");
+    l.innerHTML=(d.insights||[]).map(i=>'<div class="insight-item"><div class="insight-dot" style="background:'+i.color+'"></div><div class="insight-text">'+i.text+"</div></div>").join("");
+  }catch{l.innerHTML='<div style="color:var(--text3);font-size:14px">Log habits to see insights.</div>';}
+}
+
+// ══════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════
+let tt=null;
+function showToast(m,d=2800){const e=document.getElementById("toast");e.textContent=m;e.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>e.classList.remove("show"),d);}
+function autoResize(e){e.style.height="auto";e.style.height=Math.min(e.scrollHeight,120)+"px";}
+
+// ══════════════════════════════════════
+//  BOOT
+// ══════════════════════════════════════
+document.addEventListener("DOMContentLoaded",()=>{
+  restoreSession();
+  document.getElementById("login-pass").addEventListener("keydown",e=>{if(e.key==="Enter")doLogin();});
+  document.getElementById("signup-pass").addEventListener("keydown",e=>{if(e.key==="Enter")doSignup();});
+  if(window.speechSynthesis)window.speechSynthesis.getVoices();
+});
+</script>
+</body>
+</html>

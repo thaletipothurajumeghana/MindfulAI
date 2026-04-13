@@ -1,0 +1,3 @@
+{
+  "test/test_backend.py::TestCrisisDetection::test_detects_self_harm": true
+}

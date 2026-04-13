@@ -1,0 +1,159 @@
+/* ══════════════════════════════════════════
+   MindfulAI — dashboard.css
+   Journal and Habits view styles
+══════════════════════════════════════════ */
+
+/* ── Journal ────────────────────────────── */
+#view-journal { overflow-y: auto; }
+
+.journal-compose {
+  background: var(--bg2); border: 1px solid var(--border2);
+  border-radius: var(--r2); padding: 24px; margin-bottom: 24px;
+}
+.journal-compose-header {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;
+}
+.journal-date { font-size: 13px; color: var(--text3); }
+.mood-tag {
+  padding: 4px 10px; border-radius: 20px;
+  background: var(--accent-glow); color: var(--accent); font-size: 12px;
+}
+
+#journal-textarea {
+  width: 100%; background: var(--bg3); border: 1px solid var(--border);
+  border-radius: var(--r); color: var(--text); font-size: 14px; line-height: 1.7;
+  padding: 14px; resize: none; min-height: 140px; outline: none;
+  transition: border-color .2s;
+}
+#journal-textarea:focus   { border-color: var(--accent); }
+#journal-textarea::placeholder { color: var(--text3); }
+
+.journal-actions {
+  display: flex; gap: 10px; margin-top: 12px; justify-content: flex-end;
+}
+
+/* Journal entries list */
+.journal-entries { display: flex; flex-direction: column; gap: 14px; }
+
+.journal-entry {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--r2); padding: 20px;
+  transition: border-color .2s;
+}
+.journal-entry:hover { border-color: var(--border2); }
+
+.entry-header {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;
+}
+.entry-meta   { display: flex; align-items: center; gap: 10px; }
+.entry-date   { font-size: 12px; color: var(--text3); }
+.entry-mood   { font-size: 20px; }
+.entry-emotion {
+  font-size: 11px; padding: 2px 8px; border-radius: 20px;
+  background: var(--bg4); color: var(--text3);
+}
+
+.entry-text { font-size: 14px; color: var(--text2); line-height: 1.65; }
+
+.entry-insight {
+  margin-top: 12px; padding: 12px 14px;
+  background: var(--accent-glow); border-radius: 10px;
+  border-left: 3px solid var(--accent);
+  font-size: 13px; color: var(--accent); line-height: 1.6;
+}
+.entry-insight-label {
+  font-size: 11px; font-weight: 500; margin-bottom: 4px;
+  text-transform: uppercase; letter-spacing: .05em;
+}
+
+.btn-delete-entry {
+  padding: 4px 10px; border-radius: 6px; border: none;
+  background: transparent; color: var(--text3); font-size: 12px;
+  transition: all .2s;
+}
+.btn-delete-entry:hover { background: var(--rose-dim); color: var(--rose); }
+
+/* ── Habits ─────────────────────────────── */
+#view-habits { overflow-y: auto; }
+
+/* Weekly chart */
+.weekly-summary { margin-bottom: 20px; }
+.weekly-chart {
+  display: flex; align-items: flex-end; gap: 8px;
+  height: 90px;
+}
+.week-bar-wrap {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; gap: 5px;
+}
+.week-bar {
+  width: 100%; border-radius: 4px 4px 0 0;
+  min-height: 4px; transition: height .5s cubic-bezier(.4,0,.2,1);
+}
+.week-label { font-size: 11px; color: var(--text3); }
+.week-pct   { font-size: 10px; color: var(--text3); }
+
+/* Habit cards */
+.habits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 16px; margin-bottom: 20px;
+}
+.habit-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--r2); padding: 20px;
+  transition: border-color .2s;
+}
+.habit-card:hover { border-color: var(--border2); }
+
+.habit-card-header {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;
+}
+.habit-icon-wrap {
+  width: 44px; height: 44px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center; font-size: 22px;
+}
+.habit-streak { font-size: 12px; color: var(--amber); display: flex; align-items: center; gap: 3px; }
+
+.habit-name { font-size: 15px; font-weight: 500; margin-bottom: 3px; }
+.habit-goal { font-size: 13px; color: var(--text3); margin-bottom: 14px; }
+
+.habit-input-row { display: flex; align-items: center; gap: 8px; }
+.habit-input {
+  flex: 1; padding: 8px 12px;
+  background: var(--bg3); border: 1px solid var(--border2);
+  border-radius: 8px; color: var(--text); font-size: 14px; outline: none;
+  transition: border-color .2s;
+}
+.habit-input:focus { border-color: var(--accent); }
+.habit-unit { font-size: 12px; color: var(--text3); white-space: nowrap; }
+.btn-log {
+  padding: 8px 14px; border-radius: 8px; border: none;
+  background: var(--bg4); color: var(--text2); font-size: 12px;
+  transition: all .2s; white-space: nowrap;
+}
+.btn-log:hover { background: var(--accent-glow); color: var(--accent); }
+.btn-log.logged { background: var(--teal-dim); color: var(--teal); }
+
+.progress-bar {
+  margin-top: 12px; height: 4px;
+  background: var(--bg4); border-radius: 2px; overflow: hidden;
+}
+.progress-fill { height: 100%; border-radius: 2px; transition: width .5s cubic-bezier(.4,0,.2,1); }
+
+/* Insights panel */
+.insights-panel { }
+.insight-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.insight-item:last-child { border-bottom: none; }
+.insight-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+.insight-text { font-size: 14px; color: var(--text2); line-height: 1.55; }
+
+/* ── Responsive ─────────────────────────── */
+@media (max-width: 700px) {
+  .page-content  { padding: 20px 16px; }
+  .habits-grid   { grid-template-columns: 1fr; }
+  .page-title    { font-size: 24px; }
+}
