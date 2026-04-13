@@ -34,6 +34,11 @@ def create_app(config_class=Config):
 
 
 if __name__ == "__main__":
+    import os
+
     app = create_app()
-    print("\n✅  MindfulAI running at http://localhost:5000\n")
-    app.run(debug=True, port=5000, host="0.0.0.0")
+    port = int(os.getenv("PORT", 5000))
+    debug = os.getenv("DEBUG", "true").lower() == "true"
+
+    print(f"\n✅  MindfulAI running at http://0.0.0.0:{port}\n")
+    app.run(debug=debug, port=port, host="0.0.0.0")

@@ -1,0 +1,9 @@
+Flask>=3.0
+flask-cors
+python-dotenv
+requests
+bcrypt
+PyJWT
+gtts
+SpeechRecognition
+gunicorn
